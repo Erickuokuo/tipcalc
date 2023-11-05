@@ -6,11 +6,15 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import java.text.DecimalFormat
 
+// MainActivity.kt
 class MainActivity : AppCompatActivity() {
+
     private lateinit var serviceChargeEditText: EditText
     private lateinit var tipButton: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -18,37 +22,21 @@ class MainActivity : AppCompatActivity() {
         serviceChargeEditText = findViewById(R.id.serviceChargeEditText)
         tipButton = findViewById(R.id.tipButton)
 
-        tipButton.setOnClickListener {
-            calculateTip()
+        serviceChargeEditText.addTextChangedListener { text ->
+            // Check if the entered text is a valid number and enable the "Tip" button
+            val isNumber = text.toString().matches(Regex("^\\d+(\\.\\d{0,2})?$"))
+            tipButton.isEnabled = isNumber
         }
 
-        serviceChargeEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        tipButton.setOnClickListener {
+            val serviceChargeText = serviceChargeEditText.text.toString()
+            val serviceCharge = serviceChargeText.toDoubleOrNull() ?: 0.0
+            val tipAmount = serviceCharge * 0.15
+            val formattedTip = DecimalFormat("$#.##").format(tipAmount)
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val input = s.toString()
-                tipButton.isEnabled = isValidNumber(input)
-            }
-
-    override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-    private fun isValidNumber(input: String): Boolean {
-        // Regular expression to check if the input is a valid decimal number.
-        return input.matches("^\\$\\d{1,}(\\.\\d{0,2})?$".toRegex())
-    }
-
-    private fun calculateTip() {
-        val input = serviceChargeEditText.text.toString()
-        val numericValue = input.replace("[^\\d.]".toRegex(), "")
-        val serviceCharge = numericValue.toDouble()
-
-        val tipAmount = serviceCharge * 0.15
-
-        val df = DecimalFormat("$0.00")
-        val formattedTip = df.format(tipAmount)
-
-        Toast.makeText(this, "Tip Amount: $formattedTip", Toast.LENGTH_SHORT).show()
+            val toastMessage = "Tip: $formattedTip"
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
