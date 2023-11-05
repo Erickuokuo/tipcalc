@@ -6,13 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/serviceChargeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="$0.00"
+        android:inputType="numberDecimal"
+        tools:layout_editor_absoluteX="-16dp"
+        tools:layout_editor_absoluteY="504dp" />
+
+    <Button
+        android:id="@+id/tipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_below="@+id/serviceChargeEditText"
+        android:layout_centerHorizontal="true"
+        android:enabled="false"
+        android:text="Tip"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="581dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
